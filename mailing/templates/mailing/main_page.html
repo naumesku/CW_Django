@@ -1,0 +1,35 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="row">
+            <div class="col-4">Количество рассылок всего: {{ mailing_count_all }}</div>
+            <div class="col-4">Количество активных рассылок: {{ mailing_count_active }} </div>
+            <div class="col-4">Количество уникальных клиентов для рассылок: {{ client_count }}</div>
+        </div>
+        <div class="row text-center">
+            <H6>Вот некоторые статьи из блога:</H6>
+            <div class="col-4"></div>
+            <div class="col-8">
+                {% for object in few_blog_list %}
+                    <div class="col-md-8">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    {{ object.title }}
+                                </p>
+                            </div>
+                            {{ object.body}}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row text-center">
+{#            <div class="col-4"></div>#}
+{#            <div class="col-12 text-center">#}
+                <H6>Для работы с рассылками войдите или зарегистрируйтесь.</H6>
+{#            </div>#}
+        </div>
+    {% endif %}
+{% endblock %}

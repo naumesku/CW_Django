@@ -1,0 +1,75 @@
+{% extends 'mailing/../../../../cyrs_dj/mailing/templates/mailing/base.html' %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                     <div class="card-header">
+                        Информация о рассылке
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Тема письма</td>
+                            <td>{{ object.title_message}}</td>
+                        </tr>
+                        <tr>
+                            <td>Тело письма</td>
+                            <td>{{ object.body_message }}</td>
+                        </tr>
+                        <tr>
+                            <td>Активирована</td>
+                            <td>{{ object.is_active_mail }}</td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+
+                </div>
+                <div class="card-footer"></div>
+            </div>
+
+            <div class="col-4">
+                <div class="card">
+                     <div class="card-header">
+                        Настройки рассылки!
+                    </div>
+                </div>
+                <div class="card-body">
+                <ul>
+                    {% if mailingsetting %}
+                    <table class="table table-striped-columns">
+                    {% for i in mailingsetting %}
+                        <tr>
+                            <td class="col-2">Период рассылки:</td>
+                            <td>{{ i.start_date }} - {{ i.stop_date }}</td>
+                        </tr>
+                        <tr>
+                            <td>Частота рассылки:</td>
+                            <td>{{ i.period_choices }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </table>
+                {% endif %}
+                <p>
+                    <small>Получатели:
+                    {% for obj in object.client.get_queryset %}
+                    {{ obj }},
+                    {% endfor %}
+                </small>
+                </p>
+                <p>
+                <small>Создатель: {{ object.owner }}</small>
+                </p>
+            </div>
+                </ul>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

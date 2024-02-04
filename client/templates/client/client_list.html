@@ -1,0 +1,42 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+    {#    {% if user.is_authenticated %}#}
+        <h1 class="display-6"> Мои клиенты </h1>
+        <div class="col-12 mb-3">
+            <a href="{% url 'client:client_create' %}" class="btn btn-lg btn-outline-primary">Добавить клиента</a>
+        </div>
+{#    {% endif %}#}
+    <div class="col-4 mb-3">
+        <table class="table table-striped">
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>
+                        {{ object.email }}
+                    </td>
+                    <td>
+                        {{ object.full_name }}
+                    </td>
+{#                {% if perms.clients.view_client %}#}
+{#                    <td>#}
+{#                        {{ object.owner }}#}
+{#                    </td>#}
+{#                {% endif %}#}
+                    <td>
+                        {{ object.comment|default:'-' }}
+                    </td>
+                    <td>
+{#                        {% if user.is_superuser or user == object.owner %}#}
+                        <a href="{% url 'client:client_update' object.pk %}">Редактировать</a>
+                        <a href="{% url 'client:client_delete' object.pk %}">Удалить</a>
+{#                        {% endif %}#}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

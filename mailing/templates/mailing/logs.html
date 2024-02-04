@@ -1,0 +1,32 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="row text-center">
+            <H6>Отчет о проведенных рассылках:</H6>
+            <div class="col-4"></div>
+            <div class="col-8">
+                {% for object in logs_all %}
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                  <p class="card-text">
+                                      Дата: {{ object.date_time }}
+{#                                      Сообщение: {{ mailing }}#}
+                                      Статус: {{ object.status_try }}
+                                      Ответ сервера:{{ object.answer_server}}
+                                  </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row text-center">
+{#            <div class="col-4"></div>#}
+{#            <div class="col-12 text-center">#}
+                <H6>Для работы с рассылками войдите или зарегистрируйтесь.</H6>
+{#            </div>#}
+        </div>
+    {% endif %}
+{% endblock %}
