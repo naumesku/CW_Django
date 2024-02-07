@@ -12,12 +12,13 @@ class ClientListView(LoginRequiredMixin, ListView):
     # extra_context = {'title': 'Подписчики'}
     success_url = reverse_lazy('create:create_list')
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        # if self.request.user.has_perm('clients.view_client'):
-        return queryset
-        # else:
-        #     return queryset.filter(owner=self.request.user)
+def get_queryset(self):
+    queryset = super().get_queryset()
+    # if self.request.user.has_perm('clients.view_client'):
+    # return queryset
+    # else:
+    return queryset.filter(owner=self.request.user)
+
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):

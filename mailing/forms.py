@@ -1,17 +1,23 @@
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 
+from client.models import Client
 from mailing.models import MailingMessage, MailingSettings
 
 
 class MailingMessageForm(forms.ModelForm):
-
     class Meta:
         model = MailingMessage
         exclude = ['owner']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, user, *args, **kwargs, ):
+        self.user = user
+        super(MailingMessageForm, self).__init__(*args, **kwargs)
+
+        if user.is_superuser:
+            self.fields['client'].queryset = Client.objects.all()
+        else:
+            self.fields['client'].queryset = Client.objects.filter(owner=user)
         for field_name, field in self.fields.items():
             if field_name != 'is_active_mail':
                 field.widget.attrs['class'] = 'form-control'
@@ -44,9 +50,3 @@ class MailingSettingsForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
 
 
-
-class ModeratorForm(MailingMessageForm, forms.ModelForm):
-    # class Meta:
-    #     model = MailingMessage
-    #     fields = ('description', 'category', 'is_published')
-    pass

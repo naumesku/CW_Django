@@ -6,7 +6,9 @@
         <a class="p-2 btn btn-outline-primary" href="/client/client_list/">Мои клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="/logs/">Отчет о проведенных рассылках</a>
         <a class="p-2 btn btn-outline-primary" href="/blog/blog_list/">Прейти в Блог</a>
-{#        <a class="p-2 btn btn-outline-primary" href="/category_list/">Посмотреть категории продуктов</a>#}
+        {% if user.is_staff %}
+            <a class="p-2 btn btn-outline-primary" href="/users/user_list/">Список всех пользователей</a>
+        {% endif %}
             {% if user.is_authenticated %}
               <li><a href="{% url 'users:profile' %}" >Изменить профиль</a></li>
 {#            <div class="card-footer">#}
@@ -18,4 +20,5 @@
                 <li><a href="{% url 'users:register' %}" >Регистрация</a></li>
             {% endif %}
     </nav>
+
 </div>

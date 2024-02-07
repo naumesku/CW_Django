@@ -16,10 +16,16 @@ from mailing.models import MailingMessage, MailingSettings, MailingLogs
 class MailingMessageListView(LoginRequiredMixin, ListView):
     model = MailingMessage
 
+
 class MailingMessageCreateView(LoginRequiredMixin, CreateView):
     model = MailingMessage
     form_class = MailingMessageForm
     success_url = reverse_lazy('mailing:index')
+
+    def get_form_kwargs(self):
+        kwargs = super(MailingMessageCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -58,12 +64,13 @@ class MailingMessageDetailView(LoginRequiredMixin, DetailView):
         context_data['mailingsetting'] = MailingSettings.objects.filter(message_id=self.kwargs.get('pk'))
         return context_data
 
+
+
 class MailingMessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = MailingMessage
     form_class = MailingMessageForm
     success_url = reverse_lazy('mailing:index')
-
-    # permission_required = 'product.change_product'
+    permission_required = 'mailing.view_mailing'
 
     # def get_success_url(self):
     #     return reverse('mailing:mailing_update', args=[self.kwargs.get('pk')])

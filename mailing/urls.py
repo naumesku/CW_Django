@@ -17,5 +17,4 @@ urlpatterns = [
     path('main_page/', main_page, name='main_page'),
     path('logs/', mailing_logs, name='logs'),
 
-
 ]

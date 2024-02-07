@@ -1,14 +1,35 @@
 import random
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 
 from config import settings
 from users.forms import UserRegisterForm, UserForm
 from users.models import User
 from users.utils import token_generate, email_token
+
+def get_all_users(request):
+    users = User.objects.filter(
+        is_staff=False,
+        is_superuser=False,
+    )
+    return render(request, 'users/user_list.html', {'users': users})
+
+def toggle_activity_user(request, pk):
+    user_item = get_object_or_404(User, pk=pk)
+    if user_item.is_active:
+        user_item.is_active = False
+    else:
+        user_item.is_active = True
+    user_item.save()
+
+    return redirect(reverse('users:user_list'))
+
 
 class RegisterView(CreateView):
     model = User
@@ -31,16 +52,24 @@ class RegisterView(CreateView):
         )
         return redirect('users:confirm_email')
 
-class UserUpdateView(UpdateView):
-    model = UserRegisterForm
+class UserUpdateView(LoginRequiredMixin, UpdateView ):
+    model = UserRegisterForm,
     success_url = reverse_lazy('users:profile')
     form_class = UserForm
 
     def get_object(self, queryset=None):
         return self.request.user
 
+    # def get_form_class(self):
+    #     if not self.request.user.has_perm('users.is_active'):
+    #         return ModeratorForm
+    #     return UserRegisterForm
+
+@login_required
 def delete_user_danger(request):
     return render(request, 'users/user_delete.html')
+
+@login_required
 def delete_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.delete()
@@ -70,5 +99,6 @@ def email_verify(request, token):
         return redirect(reverse('users:login'))
     else:
         return redirect(reverse('users:register'))
+
 
 
